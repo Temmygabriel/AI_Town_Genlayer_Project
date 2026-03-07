@@ -84,13 +84,31 @@ export default function Home() {
       })
       setTxHash(String(hash))
       addLog(`📤 TX: ${hash}`)
-      addLog("⏳ Waiting for AI consensus (~30–90s)…")
-      await client.waitForTransactionReceipt({
-  hash: hash as unknown as `0x${string & { length: 66 }}`,
-  status: "FINALIZED",
-})
-      addLog("✅ Day simulated successfully!")
-      await fetchDay()
+      addLog("⏳ Waiting for AI consensus (~60–120s)…")
+
+      // Poll get_day every 5s until the day increments (meaning TX finalized)
+      const startDay = currentDay ?? 1
+      let attempts = 0
+      while (attempts < 30) {
+        await new Promise((r) => setTimeout(r, 5000))
+        attempts++
+        try {
+          const result = await client.readContract({
+            address: CONTRACT_ADDRESS,
+            functionName: "get_day",
+            args: [],
+          })
+          const newDay = Number(result)
+          if (newDay > startDay) {
+            setCurrentDay(newDay)
+            if (newDay > 1) setSelectedDay(newDay - 1)
+            addLog(`✅ Day ${newDay - 1} simulated! Now on Day ${newDay}`)
+            return
+          }
+          addLog(`⏳ Still processing… (${attempts * 5}s elapsed)`)
+        } catch (_) {}
+      }
+      addLog("⚠️ Timed out — but TX was submitted. Refresh to check the day.")
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : String(e)
       setError(msg)
