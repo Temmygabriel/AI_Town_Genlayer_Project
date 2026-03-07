@@ -80,6 +80,7 @@ export default function Home() {
         address: CONTRACT_ADDRESS,
         functionName: "simulate_day",
         args: [],
+        value: BigInt(0),
       })
       setTxHash(String(hash))
       addLog(`📤 TX: ${hash}`)
