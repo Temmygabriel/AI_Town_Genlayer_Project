@@ -86,9 +86,9 @@ export default function Home() {
       addLog(`📤 TX: ${hash}`)
       addLog("⏳ Waiting for AI consensus (~30–90s)…")
       await client.waitForTransactionReceipt({
-        hash: hash as `0x${string}`,
-        status: "FINALIZED",
-      })
+  hash: hash as unknown as `0x${string & { length: 66 }}`,
+  status: "FINALIZED",
+})
       addLog("✅ Day simulated successfully!")
       await fetchDay()
     } catch (e: unknown) {
