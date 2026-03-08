@@ -5,7 +5,7 @@ import { createClient, createAccount } from "genlayer-js"
 import { studionet } from "genlayer-js/chains"
 
 // ─── Contract ────────────────────────────────────────────────
-const CONTRACT_ADDRESS = "0x19C88C518dB99BBFd5801154129C5e1bd803Af27" as `0x${string}`
+const CONTRACT_ADDRESS = "0x7DC4c5C7C0089f6eF94B8D5d4CE2bD6FC9E17ea4" as `0x${string}`
 
 // Studionet: no private key needed — SDK auto-generates + funds a test account
 const account = createAccount()
